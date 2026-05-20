@@ -8,6 +8,7 @@ void main () {
         comprimento = Float.parseFloat(IO.readln("Informe o comprimento do(a) " + comodo + "; "));
         areaTotal = areaTotal + largura*comprimento;
         continua = IO.readln("Deseja continuar (S/N)?: ");
+
     }
-    IO.println("Área total: " + areaTotal);
+    IO.println("A área total da casa é: " + areaTotal);
 }
