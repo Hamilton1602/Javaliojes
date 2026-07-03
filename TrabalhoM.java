@@ -15,13 +15,17 @@ void main() {
         
         String entradaOpcao = System.console().readLine();
         
-        if (entradaOpcao.isEmpty() || entradaOpcao.length() > 1 || 
-            entradaOpcao.charAt(0) < '1' || entradaOpcao.charAt(0) > '4') {
-            System.out.println("Opção inválida! Digite um número de 1 a 4.");
+        if (!eInteiro(entradaOpcao)) {
+            System.out.println("Opção inválida! Digite apenas um número de 1 a 4.");
             continue;
         }
 
-        int opcao = entradaOpcao.charAt(0) - '0';
+        int opcao = Integer.parseInt(entradaOpcao);
+
+        if (opcao < 1 || opcao > 4) {
+            System.out.println("Opção inválida! Digite um número de 1 a 4.");
+            continue; 
+        }
 
         if (opcao == 4) {
             System.out.println("Sistema encerrado. Até logo!");
@@ -68,12 +72,17 @@ void cadastrarAlunos() {
     System.out.print("Quantos alunos deseja cadastrar agora? ");
     String entradaQtd = System.console().readLine();
     
-    if (entradaQtd.isEmpty() || !entradaQtd.matches("[0-9]+")) {
-        System.out.println("Quantidade inválida.");
+    if (!eInteiro(entradaQtd)) {
+        System.out.println("Quantidade inválida. Digite apenas números inteiros.");
         return;
     }
-    
+
     int qtd = Integer.parseInt(entradaQtd);
+
+    if (qtd <= 0) {
+        System.out.println("Quantidade inválida. Digite um número maior que zero.");
+        return;
+    }
 
     for (int i = 0; i < qtd; i++) {
         if (totalAlunos >= MAX_ALUNOS) {
@@ -81,7 +90,7 @@ void cadastrarAlunos() {
             break;
         }
 
-        System.out.println("\n--- Cadastro do Aluno " + (totalAlunos + 1) + " ---");
+        System.out.println("\n Cadastro do Aluno " + (totalAlunos + 1));
         
         String nome;
         while (true) {
@@ -97,20 +106,22 @@ void cadastrarAlunos() {
             }
         }
 
-        float media;
+        float media = 0;
         while (true) {
             System.out.print("Média Final (0.0 a 10.0): ");
             String entradaMedia = System.console().readLine();
             
-            if (entradaMedia.matches("[0-9]+(\\.[0-9]+)?")) {
-                media = Float.parseFloat(entradaMedia);
-                if (media >= 0.0 && media <= 10.0) {
-                    break;
-                } else {
-                    System.out.println("Nota inválida! A média deve ser estritamente entre 0.0 e 10.0.");
-                }
-            } else {
+            if (!eFloat(entradaMedia)) {
                 System.out.println("Entrada inválida! Digite um número válido para a média (use ponto para decimais).");
+                continue;
+            }
+
+            media = Float.parseFloat(entradaMedia);
+
+            if (media >= 0.0 && media <= 10.0) {
+                break; 
+            } else {
+                System.out.println("Nota inválida! A média deve ser entre 0.0 e 10.0.");
             }
         }
 
@@ -121,6 +132,38 @@ void cadastrarAlunos() {
 
     ordenarDados();
     System.out.println("\nCadastros realizados e dados ordenados com sucesso!");
+}
+
+boolean eInteiro(String texto) {
+    if (texto.isEmpty()) {
+        return false;
+    }
+    for (int i = 0; i < texto.length(); i++) {
+        char c = texto.charAt(i);
+        if (c < '0' || c > '9') {
+            return false;
+        }
+    }
+    return true;
+}
+
+boolean eFloat(String texto) {
+    if (texto.isEmpty() || texto.equals(".")) {
+        return false;
+    }
+    int pontos = 0;
+    for (int i = 0; i < texto.length(); i++) {
+        char c = texto.charAt(i);
+        if (c == '.') {
+            pontos++;
+            if (pontos > 1) {
+                return false;
+            }
+        } else if (c < '0' || c > '9') {
+            return false;
+        }
+    }
+    return true;
 }
 
 int buscarSequencial(String nomeProcurado) {
@@ -155,7 +198,7 @@ void listarAlunos() {
         return;
     }
 
-    System.out.println("\n=== LISTAGEM DE ALUNOS ===");
+    System.out.println("\n -LISTAGEM DE ALUNOS-");
     for (int i = 0; i < totalAlunos; i++) {
         String situacao = (medias[i] >= 7.0) ? "Aprovado" : "Reprovado";
         System.out.println(nomes[i] + " - Média: " + medias[i] + " - Situação: " + situacao);
